@@ -1,4 +1,9 @@
+// ignore_for_file: unused_field
+
 import 'package:flutter/material.dart';
+import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import './counter_state.dart';
 import './counter_bloc.dart';
 import './counter_event.dart';
 
@@ -29,33 +34,34 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final _bloc = CounterBloc();
+  final _counterBloc = CounterBloc(CounterState.initial());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Bloc Learning'),
       ),
-      body: Center(
-        child: StreamBuilder(
-          stream: _bloc.outCounter,
-          initialData: 0,
-          builder: ((BuildContext context, AsyncSnapshot<int> snapshot) =>
-              Text('${snapshot.data}')),
-        ),
+      body: BlocBuilder(
+        bloc: _counterBloc,
+        builder: ((context, CounterState state) {
+          return Center(
+            child: Text('${state.counter}'),
+          );
+        }),
       ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            onPressed: () => _bloc.counterEventSink.add(DecrementEvent()),
+            onPressed: () {},
             child: const Icon(Icons.remove),
           ),
           const SizedBox(
             width: 10,
           ),
           FloatingActionButton(
-            onPressed: () => _bloc.counterEventSink.add(IncrementEvent()),
+            onPressed: () {},
             child: const Icon(Icons.add),
           ),
         ],
@@ -66,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void dispose() {
     // TODO: implement dispose
-    _bloc.dispose();
+
     super.dispose();
   }
 }
